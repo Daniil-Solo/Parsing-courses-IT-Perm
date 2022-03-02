@@ -21,7 +21,7 @@ class Course:
         info += "Даты проведения: " + self.__start_date + " - " + self.__end_date + "\n"
         if self.__university:
             info += "Вуз: " + self.__university + "\n"
-        info += "Расписание: " + self.__schedule + "\n"
+        info += "Расписание: " + self.__schedule
         return info
 
 
@@ -39,7 +39,7 @@ class Program:
 
     def get_info(self, url: bool) -> str:
         info = ""
-        info += self.__title
+        info += "------------------" + self.__title + "------------------"
         if url:
             info += "\n" + self.__url
         return info

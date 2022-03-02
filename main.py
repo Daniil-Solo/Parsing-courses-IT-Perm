@@ -46,8 +46,13 @@ def parse_courses(links: list, titles: list) -> list[Program]:
 
             hidden_text = div_course.find("div", class_="hidden-block").div.p.text
             dates = re.findall("\d{2}.\d{2}.\d{4}", hidden_text)
-            start_date = dates[0]
-            end_date = dates[1]
+            if not dates:
+                dates = re.findall("[\d]+ [\S]+ 2022", hidden_text)
+            try:
+                start_date = dates[0]
+                end_date = dates[1]
+            except IndexError:
+                start_date = end_date = ""
             try:
                 start_index_uni = re.search("Вуз:", hidden_text).span()[1]
                 end_index_uni = start_index_uni + re.search("\n", hidden_text[start_index_uni:]).span()[0]
