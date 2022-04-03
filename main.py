@@ -43,6 +43,7 @@ def parse_courses(links: list, titles: list) -> list[Program]:
             study_format = opened_text[1].find("span", class_="regular").text.strip()
             n_hours = opened_text[2].find("span", class_="regular").text.strip()
             address = opened_text[3].find("span", class_="regular").text.strip()
+            is_actual = bool(div_course.find("a", class_="button-write"))
 
             hidden_text = div_course.find("div", class_="hidden-block").div.p.text
             dates = re.findall("\d{2}.\d{2}.\d{4}", hidden_text)
@@ -61,26 +62,28 @@ def parse_courses(links: list, titles: list) -> list[Program]:
                 university = ""
             schedule = get_text(div_course.find("div", class_="schedule-block").find_all("div")[1])
 
-            course = Course(title, level, study_format, n_hours, address, start_date, end_date, university, schedule)
+            course = Course(is_actual, title, level, study_format, n_hours, address, start_date, end_date, university, schedule)
             program.add_course(course)
         programs.append(program)
     return programs
 
 
-def main(view: str, url: bool):
+def main(view: str, url: bool, only_actual: bool):
     links, titles = parse_programs()
     programs = parse_courses(links, titles)
     for program in programs:
-        if program.course_count() > 0:
+        if program.course_count(only_actual) > 0:
             print(program.get_info(url))
-            print(program.get_info_about_courses(view))
+            print(program.get_info_about_courses(view, only_actual))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--view", default="small", type=str,
+    parser.add_argument("--view", default="medium", type=str,
                         help="type of view. small, medium, full")
     parser.add_argument("--url", default=False, type=bool,
                         help="outputs url of program")
+    parser.add_argument("--only_actual", default=True, type=bool,
+                        help="outputs only actual courses")
     args = parser.parse_args()
-    main(view=args.view, url=args.url)
+    main(view=args.view, url=args.url, only_actual=args.only_actual)

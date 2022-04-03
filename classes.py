@@ -1,5 +1,6 @@
 class Course:
-    def __init__(self, title, level, study_format, n_hours, address, start_date, end_date, university, schedule):
+    def __init__(self, is_actual, title, level, study_format, n_hours, address, start_date, end_date, university, schedule):
+        self.__is_actual = is_actual
         self.__title = title
         self.__level = level
         self.__study_format = study_format
@@ -9,6 +10,9 @@ class Course:
         self.__end_date = end_date
         self.__university = university
         self.__schedule = schedule
+
+    def is_actual(self):
+        return self.__is_actual
 
     def get_title(self) -> str:
         return self.__title
@@ -34,8 +38,14 @@ class Program:
     def add_course(self, course: Course):
         self.__courses.append(course)
 
-    def course_count(self) -> int:
-        return len(self.__courses)
+    def course_count(self, only_actual) -> int:
+        return len(self.get_courses(only_actual))
+
+    def get_courses(self, only_actual):
+        if only_actual:
+            return [course for course in self.__courses if course.is_actual()]
+        else:
+            return self.__courses
 
     def get_info(self, url: bool) -> str:
         info = ""
@@ -44,12 +54,12 @@ class Program:
             info += "\n" + self.__url
         return info
 
-    def get_info_about_courses(self, view: str) -> str:
+    def get_info_about_courses(self, view: str, only_actual: bool) -> str:
         info = ""
         if view == "small":
-            info += f"Курсы ({self.course_count()}) \n"
+            info += f"Курсы ({self.course_count(only_actual)}) \n"
         else:
-            for idx, course in enumerate(self.__courses):
+            for idx, course in enumerate(self.get_courses(only_actual)):
                 info += f"{idx + 1}) "
                 if view == "medium":
                     info += course.get_title()
