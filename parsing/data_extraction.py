@@ -10,7 +10,7 @@ class NoHereDataException(Exception):
 
 
 def get_link_for_programs(document: str) -> list[str]:
-    soup = BeautifulSoup(document, features="html.parser")
+    soup = BeautifulSoup(document, features="lxml")
     return [a.get('href') for a in soup.find_all("a", class_="promote")]
 
 
@@ -52,7 +52,7 @@ def get_date_with_month_name(date_text: str, year: str) -> datetime.date:
 
 
 def get_program_info(document: str) -> Program:
-    soup = BeautifulSoup(document, features="html.parser")
+    soup = BeautifulSoup(document, features="lxml")
     title = soup.find("h1", class_="title black").text.strip()
     program = Program(title, [])
 
