@@ -5,14 +5,14 @@ from dataclasses import dataclass
 @dataclass
 class Course:
     title: str
+    university: str
     study_format: str
     hours: int
     address: str
-    study_start_date: datetime.date
-    study_end_date: datetime.date
-    university: str
-    teacher: str
     schedule: str
+    study_start_date: datetime.date = None
+    study_end_date: datetime.date = None
+    last_register_date: datetime.date = None
 
 
 @dataclass
