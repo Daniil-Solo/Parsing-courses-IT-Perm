@@ -7,7 +7,7 @@ def set_programs_in_cache(programs: [Program]):
     with RedisClient() as cache:
         cache.clear()
         for program in programs:
-            cache.set_courses_by_program(program)
+            cache.set_program(program)
 
 
 if __name__ == "__main__":
