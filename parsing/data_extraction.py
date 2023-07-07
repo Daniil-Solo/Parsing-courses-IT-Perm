@@ -64,7 +64,7 @@ def get_program_info(document: str) -> Program:
         hours = int(find_second_span_by_string(course_block, "Количество учебных часов"))
         address = find_second_span_by_string(course_block, "Адрес проведения")
         schedule_block = course_block.find("div", string=re.compile("Расписание"))
-        schedule = schedule_block.findNext('div').text.strip().replace("\n", "")
+        schedule = schedule_block.findNext('div').text.strip().replace("\n", " ")
         is_actual = bool(course_block.find("a", class_="button-write"))
 
         course = Course(title, university, study_format, hours, address, schedule, is_actual)
