@@ -84,8 +84,15 @@ python app.py --view full
 
 ```
 
-## Технологии
+## Технологии для консольного приложения
 `Python 3.11`
-`Bs4`
+`bs4`
 `aoihttp`
 `lxml`
+## Технологии для телеграмм-бота
+`Python 3.11`
+`bs4`
+`aoihttp`
+`lxml`
+`redis`
+`aiogram`
