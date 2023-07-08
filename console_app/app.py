@@ -1,15 +1,13 @@
 import argparse
-import datetime
-import time
 
 from parsing.async_parsing import get_programs
-from classes import ProgramView
+from views import ProgramConsoleView
 
 
 def main(view: str, only_actual: bool):
     programs = get_programs()
     for program in programs:
-        pw = str(ProgramView(program, view, only_actual))
+        pw = str(ProgramConsoleView(program, view, only_actual))
         print(pw)
 
 

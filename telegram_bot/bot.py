@@ -5,7 +5,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from caching.redis_client import RedisClient
 from config import TOKEN
-from telegram_bot.view import CourseTgView
+from views import CourseTgView
 
 
 bot: Bot = Bot(token=TOKEN)
