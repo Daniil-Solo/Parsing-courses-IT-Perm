@@ -21,8 +21,8 @@ async def process_start_command(message: Message):
 
 @dp.message(Command(commands=['programs']))
 async def process_help_command(message: Message):
-    with RedisClient() as cache:
-        programs = cache.get_program_names_and_hash()
+    async with RedisClient() as cache:
+        programs = await cache.get_program_names_and_hash()
     kb = [
         [InlineKeyboardButton(text=name, callback_data="hash" + hash_)] for (name, hash_) in programs
     ]
@@ -33,8 +33,8 @@ async def process_help_command(message: Message):
 @dp.callback_query(Text(startswith="hash"))
 async def send_random_value(callback: CallbackQuery):
     _, program_hash = callback.data.split("hash")
-    with RedisClient() as cache:
-        p = cache.get_program_by_hash(program_hash)
+    async with RedisClient() as cache:
+        p = await cache.get_program_by_hash(program_hash)
     n_courses = len(p.courses)
     await callback.answer(
         text=f"Найдено {n_courses} курс{'' if n_courses == 1 else ('а' if 1 < n_courses < 5 else 'ов')}"
