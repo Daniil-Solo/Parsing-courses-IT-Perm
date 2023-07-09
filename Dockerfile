@@ -3,4 +3,4 @@ WORKDIR /usr/src/app/
 COPY . /usr/src/app/
 RUN pip install --upgrade setuptools
 RUN pip install -r requirements.txt
-CMD ["python", "./telegram_bot/bot.py"]
+CMD ["python", "bot.py"]
