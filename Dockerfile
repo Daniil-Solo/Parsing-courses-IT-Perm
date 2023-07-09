@@ -1,8 +1,6 @@
 FROM python:3.11
-WORKDIR /app
-COPY requirements.txt requirements.txt
+WORKDIR /usr/src/app/
+COPY . /usr/src/app/
 RUN pip install --upgrade setuptools
 RUN pip install -r requirements.txt
-RUN chmod 755 .
-COPY . .
 CMD ["python", "./telegram_bot/bot.py"]
