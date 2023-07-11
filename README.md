@@ -11,7 +11,7 @@
 Для развертывания используется Docker, конфигурация контейнера описана в Dockerfile. 
 Также потребуется Redis и токен для телеграм-бота.
 
-Ниже представлен пример .env-файла
+Пример .env-файла:
 ```bash
 REDIS_URL=rediss://<USER>:<PASSWORD>@<HOST>:<PORT>
 TOKEN=<TOKEN>
@@ -19,6 +19,10 @@ WEB_SERVICE_URL=https://my-site.com
 ```
 `WEB_SERVICE_URL` используется для получения сообщений для бота через веб-хук
 
+Для регистрации веб-хука необходимо использовать следующую ссылку: 
+```bash
+https://api.telegram.org/bot<TOKEN>/setWebhook?url=<WEB_SERVICE_URL>/bot/<TOKEN>
+```
 Для обновления состояния базы данных Redis можно использовать периодический запуск скрипта `caching/job.py`
 
 Исходный бот и база данных были успешно развернуты на платформе [render.com](https://render.com/)
