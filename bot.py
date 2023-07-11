@@ -1,15 +1,42 @@
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command, Text
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from fastapi import FastAPI
 
 from caching.redis_client import RedisClient
-from config import TOKEN
+from config import TOKEN, WEB_SERVICE_URL
 from views import CourseTgView
 
+WEBHOOK_PATH = f"/bot/{TOKEN}"
+WEBHOOK_URL = WEB_SERVICE_URL + WEBHOOK_PATH
 
 bot: Bot = Bot(token=TOKEN)
 dp: Dispatcher = Dispatcher()
+
+app = FastAPI()
+
+
+@app.on_event("startup")
+async def on_startup():
+    webhook_info = await bot.get_webhook_info()
+    if webhook_info.url != WEBHOOK_URL:
+        await bot.set_webhook(
+            url=WEBHOOK_URL
+        )
+
+
+@app.post(WEBHOOK_PATH)
+async def bot_webhook(update: dict):
+    telegram_update = types.Update(**update)
+    Dispatcher.set_current(dp)
+    Bot.set_current(bot)
+    await dp.process_update(telegram_update)
+
+
+@app.on_event("shutdown")
+async def on_shutdown():
+    await bot.get_session().close()
 
 
 @dp.message(Command(commands=["start"]))
@@ -43,7 +70,3 @@ async def send_random_value(callback: CallbackQuery):
         await callback.message.answer("☀️☀️☀️☀️☀️☀️☀️☀️☀️")
     for course in p.courses:
         await callback.message.answer(str(CourseTgView(course)))
-
-
-if __name__ == '__main__':
-    dp.run_polling(bot)
