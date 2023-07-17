@@ -25,14 +25,6 @@ async def on_startup():
         await bot.set_webhook(url=WEBHOOK_URL)
 
 
-@app.get("/update_cache")
-async def bot_webhook():
-    programs = await async_get_programs()
-    async with RedisClient() as cache:
-        await cache.set_programs(programs)
-    return {"status": "ok"}
-
-
 @app.post(WEBHOOK_PATH)
 async def bot_webhook(update: dict):
     telegram_update = types.Update(**update)

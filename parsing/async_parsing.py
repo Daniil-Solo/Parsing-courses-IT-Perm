@@ -7,8 +7,7 @@ from parsing.constants import ALL_PROGRAM_LINK
 
 
 async def get_document(link: str) -> str:
-    connector = aiohttp.TCPConnector(verify_ssl=False)
-    async with aiohttp.ClientSession(connector=connector) as session:
+    async with aiohttp.ClientSession() as session:
         async with session.get(link) as resp:
             return await resp.text()
 
