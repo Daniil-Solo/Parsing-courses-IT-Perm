@@ -11,7 +11,14 @@ class ProgramCache:
     def __init__(self, redis_client: redis.Redis):
         self.redis_client = redis_client
 
-    async def set_program(self, program: Program) -> None:
+    async def set_programs(self, programs: [Program]):
+        await self.clear()
+        tasks = []
+        for program in programs:
+            tasks.append(asyncio.create_task(self._set_program(program)))
+        await asyncio.gather(*tasks)
+
+    async def _set_program(self, program: Program) -> None:
         program_hash = hashlib.sha224(program.title.encode()).hexdigest()[:10]
         await self.redis_client.hset(name=PROGRAMS_KEY, key=program_hash, value=program.title)
         await self.redis_client.hset(name=program_hash, key=PROGRAM_TITLE_KEY, value=program.title)

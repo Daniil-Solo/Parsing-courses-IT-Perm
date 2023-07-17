@@ -22,6 +22,10 @@ async def collect_program_documents():
     return documents
 
 
-def get_programs() -> list[Program]:
-    documents = asyncio.run(collect_program_documents())
+async def async_get_programs() -> list[Program]:
+    documents = await collect_program_documents()
     return [get_program_info(d) for d in documents]
+
+
+def get_programs() -> list[Program]:
+    return asyncio.run(async_get_programs())

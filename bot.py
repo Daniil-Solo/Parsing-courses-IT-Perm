@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from caching.redis_client import RedisClient
 from config import TOKEN, WEB_SERVICE_URL
 from views import CourseTgView
+from parsing.async_parsing import async_get_programs
 
 WEBHOOK_PATH = f"/bot/{TOKEN}"
 WEBHOOK_URL = WEB_SERVICE_URL + WEBHOOK_PATH
@@ -22,6 +23,9 @@ async def on_startup():
     webhook_info = await bot.get_webhook_info()
     if webhook_info.url != WEBHOOK_URL:
         await bot.set_webhook(url=WEBHOOK_URL)
+    programs = await async_get_programs()
+    async with RedisClient() as cache:
+        await cache.set_programs(programs)
 
 
 @app.post(WEBHOOK_PATH)
