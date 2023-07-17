@@ -47,3 +47,7 @@ class Course:
 class Program:
     title: str
     courses: list[Course]
+
+    @property
+    def has_actual_courses(self):
+        return len([c for c in self.courses if c.is_actual]) > 0

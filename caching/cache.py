@@ -15,7 +15,8 @@ class ProgramCache:
         await self.clear()
         tasks = []
         for program in programs:
-            tasks.append(asyncio.create_task(self._set_program(program)))
+            if program.has_actual_courses:
+                tasks.append(asyncio.create_task(self._set_program(program)))
         await asyncio.gather(*tasks)
 
     async def _set_program(self, program: Program) -> None:
@@ -23,7 +24,8 @@ class ProgramCache:
         await self.redis_client.hset(name=PROGRAMS_KEY, key=program_hash, value=program.title)
         await self.redis_client.hset(name=program_hash, key=PROGRAM_TITLE_KEY, value=program.title)
         for course in program.courses:
-            await self.redis_client.hset(name=program_hash, key=course.title, value=course.json)
+            if course.is_actual:
+                await self.redis_client.hset(name=program_hash, key=course.title, value=course.json)
 
     async def get_program_names_and_hash(self) -> [tuple[str, str]]:
         programs = await self.redis_client.hgetall(name=PROGRAMS_KEY)
