@@ -6,9 +6,12 @@ from parsing.data_extraction import get_link_for_programs, get_program_info
 from parsing.constants import ALL_PROGRAM_LINK
 
 
+conn = aiohttp.TCPConnector(limit_per_host=5)
+
+
 async def get_document(link: str) -> str:
-    async with aiohttp.ClientSession() as session:
-        async with session.get(link) as resp:
+    async with aiohttp.ClientSession(connector=conn) as session:
+        async with session.get(link, ssl=False) as resp:
             return await resp.text()
 
 
